@@ -2,60 +2,66 @@
 
 项目仓库：<https://github.com/rick-peng-li/onlineShop-web>
 
-一个基于 MERN 技术栈的单店在线商城系统，覆盖从商品浏览、购物车、收货地址、支付、订单管理到后台商品/用户/订单管理的完整流程。前台界面与业务文案保持英文，代码注释与接口返回保持项目原有风格。
+一个基于 MERN 技术栈升级改造后的单店在线商城系统，覆盖从商品浏览、购物车、收货地址、支付、订单管理到后台商品/用户/订单管理的完整流程。界面文案保持英文，代码采用最新技术栈与现代写法。
 
 ## 项目简介
 
-- 前台：商品轮播与列表、关键词搜索、分页、商品详情与评价、购物车、登录注册、个人资料与订单历史、收货地址、支付方式选择、下单、订单详情与在线支付、联系表单。
-- 后台：管理员登录后可查看用户列表、编辑用户与管理员权限、查看/创建/编辑/删除商品、查看全部订单、标记订单已发货。
+- 前台：商品轮播与列表、关键词搜索、分页、商品详情与评价、购物车、登录注册、个人资料与订单历史、收货地址、支付方式选择、下单、订单详情与支付、联系表单。
+- 后台：管理员登录后可查看用户列表、编辑用户与管理员权限、查看/创建/编辑/删除商品（含图片上传）、查看全部订单、标记订单已发货。
 - 鉴权：JWT Bearer Token，密码使用 bcryptjs 加密存储。
-- 图片：商品图片支持外链地址，也支持通过 Multer 上传到 `uploads/` 目录并由后端静态托管。
+- 图片：商品图片支持外链地址，也支持通过 Multer 上传到 `server/uploads/` 目录并由后端静态托管。
 
 ## 技术架构
 
 | 层次 | 技术 |
 | --- | --- |
-| 前端框架 | React 17、React Router 5、React Bootstrap、Bootstrap 4 |
-| 状态管理 | Redux、redux-thunk、redux-devtools-extension |
-| 前端请求 | axios（开发环境通过 CRA proxy 转发到后端） |
-| 后端框架 | Node.js、Express 4（ES Module） |
-| 数据库 | MongoDB、Mongoose 5 |
-| 认证 | jsonwebtoken、bcryptjs |
-| 文件上传 | multer |
-| 开发工具 | nodemon、concurrently、morgan |
-| 构建 | Create React App（react-scripts 4） |
+| 前端构建 | Vite 5 |
+| 前端框架 | React 18 |
+| UI 组件库 | Ant Design 5 + @ant-design/icons |
+| 路由 | React Router 6 |
+| 状态管理 | Zustand（含 persist 中间件） |
+| 网络请求 | axios（统一实例与拦截器） |
+| 后端框架 | Node.js + Express 5（ES Module） |
+| 数据库 | MongoDB 7 + Mongoose 8 |
+| 认证 | jsonwebtoken 9、bcryptjs |
+| 文件上传 | multer 1.4.5-lts |
+| 开发工具 | nodemon、morgan、concurrently |
 
-开发环境下前端运行在 `3000` 端口，后端运行在 `5001` 端口，前端通过 `frontend/package.json` 中的 `proxy` 将 `/api` 请求转发到后端。生产环境下先构建前端，由 Express 托管 `frontend/build` 静态资源并接管前端路由。
+开发环境下前端运行在 `5173` 端口，后端运行在 `5001` 端口，前端通过 Vite `server.proxy` 将 `/api` 与 `/uploads` 请求转发到后端。生产环境下先构建前端，由 Express 托管 `client/dist` 静态资源并接管前端路由。
 
 ## 目录结构
 
 ```text
 onlineShop-web
-├── backend
-│   ├── Config/db.js                 # MongoDB 连接
-│   ├── MiddleWare                  # 鉴权与错误处理中间件
-│   ├── Models                      # 用户、商品、订单、联系消息模型
-│   ├── controllers                 # 各业务控制器
-│   ├── Routes                      # REST 路由
-│   ├── data                        # 种子数据（用户、商品）
-│   ├── utils/generateToken.js      # JWT 签发
-│   ├── Seeder.js                   # 数据导入/清除
-│   └── server.js                   # 服务入口
-├── frontend
-│   ├── public                      # 静态资源与页面模板
+├── client                  # 前端（Vite + React 18 + Ant Design）
+│   ├── public              # 静态资源（商品图片、favicon）
 │   └── src
-│       ├── actions                 # Redux 异步动作
-│       ├── components              # 通用组件
-│       ├── constants               # Redux 常量
-│       ├── image                   # 页面图片素材
-│       ├── reducers                # Redux reducer
-│       ├── screens                 # 页面
-│       ├── App.js                  # 路由配置
-│       └── Store.js                # Redux store
-├── uploads                         # 商品图片上传目录
-├── .env                            # 环境变量（本地创建，不提交）
+│       ├── assets/images   # 页面图片素材
+│       ├── components      # 通用组件（Header、Footer、ProductCard 等）
+│       ├── constants       # 常量
+│       ├── layouts         # 布局（MainLayout）
+│       ├── pages           # 前台页面
+│       │   └── admin       # 后台页面
+│       ├── router          # 路由配置
+│       ├── services        # API 方法层（按模块拆分）
+│       ├── store           # Zustand 状态（auth、cart）
+│       ├── styles          # 全局样式
+│       ├── utils           # 请求实例、格式化工具
+│       └── main.jsx        # 应用入口
+├── server                  # 后端（Express 5 + Mongoose 8）
+│   ├── config              # 数据库连接配置
+│   ├── controllers         # 业务控制器
+│   ├── data                # 种子数据
+│   ├── middleware          # 鉴权与错误处理中间件
+│   ├── models              # 数据模型
+│   ├── routes              # REST 路由
+│   ├── uploads             # 上传图片目录
+│   ├── utils               # 工具（JWT 签发）
+│   ├── seeder.js           # 数据导入/清除
+│   └── server.js           # 服务入口
 ├── .gitignore
-└── package.json
+├── package.json            # 根脚本（concurrently 启动前后端）
+└── README.md
 ```
 
 ## 页面与路由
@@ -64,30 +70,30 @@ onlineShop-web
 
 | 路由 | 页面 | 功能 |
 | --- | --- | --- |
-| `/` | HomeScreen | 轮播图、商品列表、分页、搜索入口 |
-| `/search/:keyword` | HomeScreen | 按关键词搜索商品 |
-| `/page/:pageNumber` | HomeScreen | 商品列表分页 |
-| `/product/:id` | ProductScreen | 商品详情、库存、数量选择、加入购物车、查看与提交评价 |
-| `/cart/:id?` | CartScreen | 购物车列表、修改数量、删除商品、结算入口 |
-| `/login` | LoginScreen | 用户/管理员登录，支持登录后跳转 |
-| `/register` | RegisterScreen | 用户注册 |
-| `/profile` | ProfileScreen | 修改个人资料、查看我的订单 |
-| `/shipping` | ShippingScreen | 填写收货地址 |
-| `/payment` | PaymentScreen | 选择支付方式（PayPal） |
-| `/placeorder` | PlaceOrderScreen | 确认订单商品、地址、金额并下单 |
-| `/order/:id` | OrderScreen | 订单详情、支付状态、PayPal 支付、管理员标记发货 |
-| `/contact` | ContactScreen | 提交联系表单，消息写入数据库 |
+| `/` | HomePage | 轮播图、商品列表、分页、搜索入口 |
+| `/search/:keyword` | HomePage | 按关键词搜索商品 |
+| `/page/:pageNumber` | HomePage | 商品列表分页 |
+| `/product/:id` | ProductPage | 商品详情、库存、数量选择、加入购物车、查看与提交评价 |
+| `/cart` | CartPage | 购物车列表、修改数量、删除商品、结算入口 |
+| `/login` | LoginPage | 用户/管理员登录 |
+| `/register` | RegisterPage | 用户注册 |
+| `/profile` | ProfilePage | 修改个人资料、查看我的订单 |
+| `/shipping` | ShippingPage | 填写收货地址 |
+| `/payment` | PaymentPage | 选择支付方式（PayPal） |
+| `/placeorder` | PlaceOrderPage | 确认订单商品、地址、金额并下单 |
+| `/order/:id` | OrderPage | 订单详情、支付状态、模拟支付、管理员标记发货 |
+| `/contact` | ContactPage | 提交联系表单，消息写入数据库 |
 
 ### 后台页面
 
 | 路由 | 页面 | 功能 |
 | --- | --- | --- |
-| `/admin/userlist` | UserListScreen | 用户列表、删除用户、进入编辑 |
-| `/admin/user/:id/edit` | UserEditScreen | 编辑用户资料与管理员权限 |
-| `/admin/productlist` | ProductListScreen | 商品列表、新建商品、删除商品 |
-| `/admin/productlist/:pageNumber` | ProductListScreen | 商品列表分页 |
-| `/admin/product/:id/edit` | ProductEditScreen | 编辑商品信息、上传商品图片 |
-| `/admin/orderlist` | OrderListScreen | 全部订单列表与详情入口 |
+| `/admin/userlist` | UserListPage | 用户列表、删除用户、进入编辑 |
+| `/admin/user/:id/edit` | UserEditPage | 编辑用户资料与管理员权限 |
+| `/admin/productlist` | ProductListPage | 商品列表、新建商品、删除商品 |
+| `/admin/productlist/:pageNumber` | ProductListPage | 商品列表分页 |
+| `/admin/product/:id/edit` | ProductEditPage | 编辑商品信息、上传商品图片 |
+| `/admin/orderlist` | OrderListPage | 全部订单列表与详情入口 |
 
 ## 接口设计
 
@@ -161,23 +167,15 @@ docker run -d --name onlineShop-mongo -p 27017:27017 mongo:7.0
 
 ### 2. 安装依赖
 
-在项目根目录安装后端依赖：
-
 ```bash
 npm install
-```
-
-安装前端依赖（React 17 与部分依赖存在 peer 版本差异，需使用 legacy 模式）：
-
-```bash
-cd frontend
-npm install --legacy-peer-deps
-cd ..
+cd server && npm install && cd ..
+cd client && npm install && cd ..
 ```
 
 ### 3. 配置环境变量
 
-在项目根目录创建 `.env`：
+在 `server/` 目录下创建 `.env`：
 
 ```bash
 NODE_ENV=development
@@ -187,9 +185,9 @@ JWT_SECRET=onlineShop_secret_key
 PAYPAL_CLIENT_ID=your_paypal_client_id
 ```
 
-说明：macOS 的 AirPlay Receiver 默认占用 `5000` 端口，因此本项目后端使用 `5001`，前端 `proxy` 已指向 `http://127.0.0.1:5001`。如使用其他端口，需同时修改 `.env` 的 `PORT` 与 `frontend/package.json` 的 `proxy`。
+说明：macOS 的 AirPlay Receiver 默认占用 `5000` 端口，因此本项目后端使用 `5001`，前端 Vite `proxy` 已指向 `http://127.0.0.1:5001`。如需更换端口，需同步修改 `server/.env` 的 `PORT` 与 `client/vite.config.js` 的 `server.proxy`。
 
-不配置 `PAYPAL_CLIENT_ID` 时，订单详情页不会加载 PayPal 支付按钮，其余功能不受影响。
+不配置 `PAYPAL_CLIENT_ID` 时不影响本地流程，订单详情页提供模拟支付按钮用于联调。
 
 ### 4. 初始化数据
 
@@ -212,25 +210,23 @@ npm run dev
 该命令会同时启动：
 
 - 后端：<http://127.0.0.1:5001>
-- 前端：<http://127.0.0.1:3000>
+- 前端：<http://127.0.0.1:5173>
 
 也可分别启动：
 
 ```bash
-npm run server   # 仅后端，nodemon 监听改动
-npm run client   # 仅前端
+npm run server   # 后端，nodemon 监听改动
+npm run client   # 前端
 ```
 
 ### 6. 生产模式
 
 ```bash
-cd frontend
 npm run build
-cd ..
 NODE_ENV=production npm start
 ```
 
-后端会自动托管 `frontend/build`，访问 <http://127.0.0.1:5001> 即可。
+后端会自动托管 `client/dist`，访问 <http://127.0.0.1:5001> 即可。
 
 ## 测试账号
 
@@ -240,7 +236,7 @@ NODE_ENV=production npm start
 | 普通用户 | john@example.com | 123456 |
 | 普通用户 | jane@example.com | 123456 |
 
-管理员登录后，导航栏会出现 `Admin` 下拉菜单，可进入用户、商品和订单管理页面。
+管理员登录后，右上角会显示用户名，点击展开可进入 Profile 或后台 Users / Products / Orders 管理页面。
 
 ## 使用说明
 
@@ -248,4 +244,4 @@ NODE_ENV=production npm start
 - 商品评价需要登录，且同一用户对同一商品只能评价一次。
 - 运费规则：商品总额超过 100 美元免运费，否则运费 100 美元；税费按商品总额的 15% 计算。
 - 后台新建商品会先生成一条示例数据，再进入编辑页补全信息；图片可以通过文件上传或直接填写图片地址。
-- 上传的图片保存在 `uploads/`，生产部署时请保证该目录可写并持久化。
+- 上传的图片保存在 `server/uploads/`，生产部署时请保证该目录可写并持久化。
