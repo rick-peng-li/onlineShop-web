@@ -3,14 +3,53 @@ header{
     box-shadow:  0px 5px 5px -3px rgba(50, 50, 93, 0.25);   
 }
 
+.site-header{
+    padding: 0.4rem 0;
+}
+
+.search-group{
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin: 0 0 0 1.5rem;
+}
+
+.header-nav{
+    white-space: nowrap;
+}
+
+.header-nav .nav-link{
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+}
+
+@media (max-width: 1199.98px) {
+    .search-group{
+        width: 100%;
+        margin: 0.75rem 0;
+    }
+
+    .search-form{
+        flex: 1 1 auto;
+        width: auto;
+    }
+
+    .header-nav{
+        margin-top: 0.25rem;
+    }
+}
+
 /* searchbox */
 
 .search-btn{
     color: tomato; 
+    white-space: nowrap;
 }
 .search-form{
     border: 1px solid tomato;
     border-radius: 3%;
+    width: 220px;
+    min-width: 160px;
 }
 
 /* Product */

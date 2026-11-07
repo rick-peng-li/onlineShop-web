@@ -20,7 +20,13 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="light" variant="light" expand="lg" collapseOnSelect>
+      <Navbar
+        bg="light"
+        variant="light"
+        expand="xl"
+        collapseOnSelect
+        className="site-header"
+      >
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
@@ -29,14 +35,14 @@ const Header = () => {
                 width="150"
                 height="40"
                 className="d-inline-block align-top"
-                alt="React Bootstrap logo"
+                alt="sam's accurium"
               />
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Route render={({ history }) => <SearchBox history={history} />} />
-            <Nav className="ml-auto">
+            <Nav className="ml-auto align-items-center header-nav">
             <LinkContainer to="/">
             <Nav.Link>
               <i className="fas fa-home"></i> home

@@ -54,10 +54,12 @@ const OrderScreen = ({ match, history }) => {
 
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
-      console.log(clientId);
+      if (!clientId) {
+        return;
+      }
       const script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=Aby75ukZz2mxo1l167-9c8F1cMEkaVp5ruTD1EeT_ch5VzxOFFHw3QjHqv8M3WIALKiXJ6s7gd4oaCex`;
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
       script.async = true;
       script.onload = () => {
         setSdkReady(true);
